@@ -28,6 +28,12 @@ with sync_playwright() as p:
         assert not page.locator('#download').is_enabled(), 'Download antigo nao bloqueado'
         page.locator('#make').click()
         assert page.locator('#download').is_enabled(), 'Download nao reativado'
+        page.locator('#brief').fill('Quero um story azul para uma propaganda com o texto "Oferta especial hoje"')
+        page.locator('#applybrief').click()
+        assert page.locator('#format').input_value()=='story', 'Pedido nao definiu formato'
+        assert page.locator('#theme').input_value()=='blue', 'Pedido nao definiu cor'
+        assert page.locator('#headline').input_value()=='Oferta especial hoje', 'Pedido nao definiu titulo'
+        assert page.locator('#download').is_enabled(), 'Pedido nao gerou previa'
         assert page.locator('#plans .service').count()==3, 'Planos incompletos'
         assert page.locator('#plans button:disabled').count()==2, 'Planos pagos nao devem estar ativos'
         page.locator('#chatinput').fill('Como baixar minha arte?')
