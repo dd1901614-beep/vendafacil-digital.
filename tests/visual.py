@@ -24,6 +24,10 @@ with sync_playwright() as p:
         assert page.locator('#art').evaluate('(c)=>c.width===1080&&c.height===1080'), 'Formato quadrado incorreto'
         page.locator('#suggest').click()
         assert page.locator('#headline').input_value(), 'Sugestao nao gerada'
+        page.locator('#headline').fill('Nova promocao')
+        assert not page.locator('#download').is_enabled(), 'Download antigo nao bloqueado'
+        page.locator('#make').click()
+        assert page.locator('#download').is_enabled(), 'Download nao reativado'
         assert page.locator('#photo').count()==1, 'Campo de foto ausente'
         assert page.locator('#photo').get_attribute('accept')=='image/png,image/jpeg,image/webp', 'Tipos de foto incorretos'
         assert not errors, 'Erros JavaScript: '+str(errors)
