@@ -24,6 +24,8 @@ with sync_playwright() as p:
         assert page.locator('#art').evaluate('(c)=>c.width===1080&&c.height===1080'), 'Formato quadrado incorreto'
         page.locator('#suggest').click()
         assert page.locator('#headline').input_value(), 'Sugestao nao gerada'
+        assert page.locator('#photo').count()==1, 'Campo de foto ausente'
+        assert page.locator('#photo').get_attribute('accept')=='image/png,image/jpeg,image/webp', 'Tipos de foto incorretos'
         assert not errors, 'Erros JavaScript: '+str(errors)
         print(label, 'PASSOU: catalogo, largura, formatos, sugestao e download')
         page.close()
