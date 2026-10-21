@@ -1,0 +1,24 @@
+name: Verificar site
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Conferir estrutura e privacidade
+        shell: bash
+        run: |
+          test -s index.html
+          test -s README.md
+          grep -q 'lang="pt-BR"' index.html
+          grep -q 'id="catalog"' index.html
+          grep -q 'id="format"' index.html
+          grep -q 'VENDAFÁCIL' index.html
+          if grep -Ein '(sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|-----BEGIN .*PRIVATE KEY-----)' index.html README.md; then
+            echo 'Possivel segredo no repositorio'
+            exit 1
+          fi
+          echo 'Verificacoes basicas passaram'
